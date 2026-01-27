@@ -146,7 +146,7 @@
 
                 <button
                     @click="activeTab='form'"
-                    class="btn btn-outline-light w-100 p-3 mb-2" type="button">
+                    class="btn btn-outline-light w-100 p-3 mb-2 text-secondary" type="button">
                     Редактировать информацию
                 </button>
 

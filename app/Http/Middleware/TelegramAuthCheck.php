@@ -32,7 +32,7 @@ class TelegramAuthCheck
 
             $botUser->telegram_chat_id = env("TELEGRAM_ADMIN_CHANNEL");
             $botUser->fio_from_telegram = "РЕЖИМ ОТЛАДКИ СИСТЕМЫ";
-            $botUser->role = RoleEnum::SUPERADMIN->value;
+            $botUser->role = RoleEnum::ADMIN->value;
 
             $request->botUser = $botUser;
             return $next($request);

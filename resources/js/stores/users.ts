@@ -1,6 +1,7 @@
 import {defineStore} from 'pinia'
 import {makeAxiosFactory} from './utillites/makeAxiosFactory'
-import { useAlertStore } from './utillites/useAlertStore'
+import {useAlertStore} from './utillites/useAlertStore'
+import axios, {AxiosError} from "axios";
 
 export interface User {
     id: number
@@ -24,6 +25,7 @@ export const useUsersStore = defineStore('users', {
         items: [] as User[],
         self: null,
         loading: false,
+        progress: 0,
         error: null as string | null,
     }),
     getters: {
@@ -111,8 +113,6 @@ export const useUsersStore = defineStore('users', {
             this.items = data.data
             this.pagination = data
         },
-
-
         async fetchOne(id: number) {
             try {
                 const {data} = await makeAxiosFactory(`${path}/${id}`, 'GET')
@@ -128,7 +128,7 @@ export const useUsersStore = defineStore('users', {
 
             const alertStore = useAlertStore()
 
-            alertStore.show(   "Загрузка файла началась")
+            alertStore.show("Загрузка файла началась")
             try {
                 const formData = new FormData()
 
@@ -138,22 +138,30 @@ export const useUsersStore = defineStore('users', {
 
                 formData.append('file', file)
 
-                const { data } = await axios.post<{ message: string }>(
+                axios.defaults.adapter = "xhr";
+
+                const {data} = await axios.post<{ message: string }>(
                     `${path}/send-video`,
                     formData,
                     {
                         headers: {
                             'Content-Type': 'multipart/form-data'
-                        }
+                        },
+                        onUploadProgress: (e) => {
+                            if (e.total) {
+                                this.progress =
+                                    Math.round((e.loaded * 100) / e.total);
+                            }
+                        },
                     }
                 )
 
                 let message = data.message || 'Файл успешно загружен'
-                alertStore.show(     message, "success")
+                alertStore.show(message, "success")
             } catch (err) {
                 const error = err as AxiosError<{ message?: string }>
                 this.error = error.response?.data?.message || 'Ошибка при загрузке файла'
-                alertStore.show( this.error,"error")
+                alertStore.show(this.error, "error")
             } finally {
                 this.loading = false
             }
@@ -209,10 +217,10 @@ export const useUsersStore = defineStore('users', {
 
 
             const {data} = await makeAxiosFactory(`${path}/${id}/work-status`, 'POST', {
-                is_work:is_work
+                is_work: is_work
             })
 
-            alertStore.show( "Статус успешно обновлен")
+            alertStore.show("Статус успешно обновлен")
 
             const idx = this.items.findIndex(u => u.id === id)
             if (idx !== -1) this.items[idx] = data

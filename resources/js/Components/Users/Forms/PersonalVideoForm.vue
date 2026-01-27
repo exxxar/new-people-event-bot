@@ -133,6 +133,7 @@
                     />
 
                     <button
+                        :disabled="userStore.loading"
                         type="button"
                         class="btn btn-outline-secondary mt-2" @click="$refs.fileInput.click()">
                         Выбрать файл
@@ -140,12 +141,24 @@
 
                     <div v-if="videoFile" class="mt-3">
                         <p class="fw-semibold">Вы выбрали:</p>
-                        <p>{{ videoFile.name }}</p>
+                        <p class="text-break">{{ videoFile.name }}</p>
                     </div>
                 </div>
 
+                <template v-if="userStore.progress > 0">
+                    <div
+                        class="w-100 mb-2"
+                        style=" background: #eee; height: 10px; border-radius: 4px;">
+                        <div
+                            :style="{ width: userStore.progress + '%', background: '#42b883', height: '10px', borderRadius: '4px' }"
+                        ></div>
+                    </div>
+                    <p class="fst-italic">Уже загружено <span class="fw-bold">{{ userStore.progress }}%</span></p>
+                </template>
+
                 <button
                     @click="activeTab='form'"
+                    :disabled="userStore.loading"
                     class="btn btn-outline-light w-100 p-3 mb-2 text-secondary" type="button">
                     Редактировать информацию
                 </button>
@@ -156,7 +169,14 @@
                     :disabled="!videoFile||userStore.loading"
 
                 >
-                    Отправить видео
+                    <template v-if="!videoFile">
+                        <span>Выберите видео для отправки</span>
+                    </template>
+                    <template v-if="videoFile">
+                        <span v-if="userStore.loading">Видео загружается...</span>
+                        <span v-else>Отправить видео</span>
+                    </template>
+
                 </button>
             </template>
 
@@ -199,7 +219,7 @@ export default {
     },
     created() {
         this.userStore.fetchSelf().then(() => {
-            let userName = this.self.name.split(" ")
+            let userName = (this.self.name||'').split(" ")
 
             if (userName.length<=1)
                 userName = this.self.fio_from_telegram.split(" ")

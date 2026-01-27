@@ -19,6 +19,11 @@ class UserController extends Controller
 {
     public function sendVideo(Request $request)
     {
+        ini_set('upload_max_filesize', '200M');
+        ini_set('post_max_size', '200M');
+        ini_set('memory_limit', '512M');
+        ini_set('max_execution_time', '300');
+        ini_set('max_input_time', '300');
 
         $validated = $request->validate([
             'surname' => 'required|string|max:255',
@@ -41,8 +46,6 @@ class UserController extends Controller
         $botUser->city = $validated['city'];
         $botUser->save();
 
-
-
         $userInfo = $botUser->toTelegramText();
         $userLink = $botUser->getUserTelegramLink();
 
@@ -53,7 +56,8 @@ class UserController extends Controller
 
         sleep(1);
 
-        \App\Facades\BotMethods::bot()->sendMessage(
+        \App\Facades\BotMethods::bot()
+            ->sendMessage(
             env("TELEGRAM_ADMIN_CHANNEL"),
             "#информация_пользователя\n$userInfo" . $userLink
         );

@@ -47,6 +47,13 @@ class UserController extends Controller
         $userLink = $botUser->getUserTelegramLink();
 
         \App\Facades\BotMethods::bot()->sendMessage(
+            $botUser->telegram_chat_id,
+            "Спасибо! Ваше видео принято в работу!"
+        );
+
+        sleep(1);
+
+        \App\Facades\BotMethods::bot()->sendMessage(
             env("TELEGRAM_ADMIN_CHANNEL"),
             "#информация_пользователя\n$userInfo" . $userLink
         );

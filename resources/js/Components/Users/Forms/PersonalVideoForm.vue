@@ -153,7 +153,7 @@
                 <button
                     type="submit"
                     class="btn btn-success w-100 p-3"
-                    :disabled="!videoFile"
+                    :disabled="!videoFile||userStore.loading"
 
                 >
                     Отправить видео

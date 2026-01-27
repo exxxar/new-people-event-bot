@@ -6,7 +6,7 @@
             <img src="/logo.png" alt="logo" style="max-width: 160px"/>
         </div>
 
-        <!-- ТАБЫ -->
+<!--        &lt;!&ndash; ТАБЫ &ndash;&gt;
         <ul class="nav nav-tabs mb-2">
             <li class="nav-item">
                 <button
@@ -26,7 +26,7 @@
                     Загрузка видео
                 </button>
             </li>
-        </ul>
+        </ul>-->
 
         <form @submit.prevent="submitForm">
             <!-- ТАБ 1: ФОРМА -->
@@ -145,6 +145,12 @@
                 </div>
 
                 <button
+                    @click="activeTab='form'"
+                    class="btn btn-outline-light w-100 p-3 mb-2" type="button">
+                    Редактировать информацию
+                </button>
+
+                <button
                     type="submit"
                     class="btn btn-success w-100 p-3"
                     :disabled="!videoFile"
@@ -199,8 +205,9 @@ export default {
                 userName = this.self.fio_from_telegram.split(" ")
 
             this.form.name = userName[0] || ''
-            this.form.patronymic = userName[2] || ''
-            this.form.surname = userName[1] || ''
+            this.form.patronymic = userName[1] || ''
+            this.form.surname = userName[2] || ''
+            this.form.city = this.self.city || ''
         })
     },
     methods: {

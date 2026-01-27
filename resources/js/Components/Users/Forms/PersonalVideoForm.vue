@@ -193,7 +193,11 @@ export default {
     },
     created() {
         this.userStore.fetchSelf().then(() => {
-            const userName = this.self.name.split(" ")
+            let userName = this.self.name.split(" ")
+
+            if (userName.length<=1)
+                userName = this.self.fio_from_telegram.split(" ")
+
             this.form.name = userName[0] || ''
             this.form.patronymic = userName[2] || ''
             this.form.surname = userName[1] || ''

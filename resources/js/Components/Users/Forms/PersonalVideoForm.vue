@@ -193,10 +193,10 @@ export default {
     },
     created() {
         this.userStore.fetchSelf().then(() => {
-            const userName = this.self.fio_from_telegram.split(" ")
-            this.form.name = userName[0]
-            this.form.patronymic = userName[2]
-            this.form.surname = userName[1]
+            const userName = this.self.name.split(" ")
+            this.form.name = userName[0] || ''
+            this.form.patronymic = userName[2] || ''
+            this.form.surname = userName[1] || ''
         })
     },
     methods: {

@@ -18,8 +18,8 @@ class TelegramController extends Controller
     {
         if (env("APP_DEBUG")) {
             $user = User::query()->first();
-            $user->role = RoleEnum::SUPERADMIN->value;
-            $user->base_role = RoleEnum::SUPERADMIN->value;
+            $user->role = RoleEnum::ADMIN->value;
+            $user->base_role = RoleEnum::ADMIN->value;
         } else {
             $user = User::query()
                 ->find($request->botUser->id);

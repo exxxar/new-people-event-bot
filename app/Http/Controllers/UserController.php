@@ -53,15 +53,15 @@ class UserController extends Controller
         $userInfo = $botUser->toTelegramText();
         $userLink = $botUser->getUserTelegramLink();
 
-        $text = "🍀<b>Спасибо! Ваше поздравление принято!</b>
+        $text = "✅ <b>Спасибо! Ваше поздравление принято!</b>
 
 Чтобы не пропустить итоги акции, подписывайтесь на нас в социальных сетях:
 
-🌐 https://t.me/Newpeople_dnr
+📲 https://t.me/Newpeople_dnr
 
-🌐 https://vk.com/newpeople_dnr
+📲 https://vk.com/newpeople_dnr
 
-Мира вам и благополучия! 🤍";
+<b>Мира вам и благополучия!</b> 🤍";
 
         \App\Facades\BotMethods::bot()->sendMessage(
             $botUser->telegram_chat_id,

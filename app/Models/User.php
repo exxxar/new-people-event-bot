@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -27,6 +28,8 @@ class User extends Authenticatable
         "fio_from_telegram",
         "telegram_chat_id",
         "role",
+        "birthday",
+        "city",
         "email_verified_at",
         "password",
         "blocked_at",
@@ -74,11 +77,16 @@ class User extends Authenticatable
 
     public function toTelegramText(): string
     {
+        if (!is_null($this->birthday ?? null))
+            $age = Carbon::parse($this->birthday)->age;
+
         $fields = [
             '#' => $this->id,
-            'Имя' => $this->name,
-            'Email' => $this->email,
+            'ФИО' => $this->name,
             'ФИО из Telegram' => $this->fio_from_telegram,
+            'День рождения' => $this->birthday ?? 'не заполнен',
+            'Возраст' => $age ?? 'не заполнен',
+            'Регион' => $this->region ?? 'не заполнен',
             'Город' => $this->city ?? 'не заполнен',
             'ID чата Telegram' => $this->telegram_chat_id,
             'Создан' => $this->created_at,

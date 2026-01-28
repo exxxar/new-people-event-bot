@@ -3,7 +3,7 @@
     <div class="container py-4" v-if="self">
         <!-- ЛОГОТИП -->
         <div class="text-center mb-4">
-            <img src="/logo.png" alt="logo" style="max-width: 160px"/>
+            <img src="/пнглого.png" alt="logo" style="max-width: 160px"/>
         </div>
 
 <!--        &lt;!&ndash; ТАБЫ &ndash;&gt;
@@ -31,13 +31,6 @@
         <form @submit.prevent="submitForm">
             <!-- ТАБ 1: ФОРМА -->
             <template v-if="activeTab === 'form'">
-                <!-- Кнопка на правила -->
-                <div class="my-4 text-center">
-                    <a href="https://telegra.ph/Pravila-konkursa-01-27"
-                       target="_blank" class="btn btn-outline-primary">
-                        Правила участия
-                    </a>
-                </div>
 
                 <!-- ФОРМА -->
 
@@ -78,6 +71,30 @@
 
                 <div class="form-floating mb-2">
                     <input
+                        type="date"
+                        class="form-control"
+                        id="birthday"
+                        placeholder="Дата рождения"
+                        v-model="form.birthday"
+                        required
+                    />
+                    <label for="birthday">Дата рождения</label>
+                </div>
+
+                <div class="form-floating mb-2">
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="region"
+                        placeholder="Регион"
+                        v-model="form.region"
+                        required
+                    />
+                    <label for="region">Регион</label>
+                </div>
+
+                <div class="form-floating mb-2">
+                    <input
                         type="text"
                         class="form-control"
                         id="city"
@@ -94,18 +111,32 @@
                         class="form-check-input"
                         type="checkbox"
                         id="agree"
-                        v-model="form.agree"
+                        v-model="form.agreeWithRules"
                         required
                     />
                     <label class="form-check-label" for="agree">
-                        Я ознакомлен с <a href="https://telegra.ph/Politika-konfidencialnosti-01-27-76" target="_blank">правилами
-                        сервиса</a> и даю согласие на использование видео и обработку персональных данных
+                        Я даю своё согласие на обработку персональных данных
                     </label>
                 </div>
 
+                <!-- ЧЕКБОКС СОГЛАСИЯ -->
+                <div class="form-check mb-2">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="agree"
+                        v-model="form.agreeUseVideo"
+                        required
+                    />
+                    <label class="form-check-label" for="agree">
+                        Я даю своё согласие на использование загруженных мною видео-роликов в целях реализации акции «Моё слово защитнику»
+                    </label>
+                </div>
+
+
                 <!-- КНОПКА ПРОДОЛЖИТЬ -->
                 <button
-                    :disabled="!form.agree"
+                    :disabled="!form.agreeWithRules || !form.agreeUseVideo"
                     class="btn btn-primary w-100 p-3" type="submit">
                     Продолжить
                 </button>
@@ -202,7 +233,10 @@ export default {
                 name: "",
                 patronymic: "",
                 city: "",
-                agree: false,
+                region: "",
+                birthday: "",
+                agreeWithRules: false,
+                agreeUseVideo: false,
             },
 
             videoFile: null,

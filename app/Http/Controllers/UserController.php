@@ -30,7 +30,9 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'patronymic' => 'nullable|string|max:255',
             'city' => 'required|string|max:255',
-            'file' => 'required|file|mimes:mp4,mov,avi,webm|max:51200', // пример
+            'region' => 'required|string|max:255',
+            'birthday' => 'required|string|max:255',
+            'file' => 'required|file|mimes:mp4,mov,avi,webm|max:1151200',
         ]);
 
         $file = $request->file('file');
@@ -44,14 +46,27 @@ class UserController extends Controller
         $botUser = $request->botUser;
         $botUser->name = $validated['name'] . " " . $validated['patronymic'] . " " . $validated['surname'];
         $botUser->city = $validated['city'];
+        $botUser->region = $validated['region'];
+        $botUser->birthday = Carbon::parse($validated["birthday"]);
         $botUser->save();
 
         $userInfo = $botUser->toTelegramText();
         $userLink = $botUser->getUserTelegramLink();
 
+        $text = `
+🍀 <b>Спасибо! Ваше поздравление принято!</b>
+
+Чтобы не пропустить итоги акции, подписывайтесь на нас в социальных сетях:
+
+🌐 https://t.me/Newpeople_dnr
+
+🌐 https://vk.com/newpeople_dnr
+
+Мира вам и благополучия! 🤍
+`;
         \App\Facades\BotMethods::bot()->sendMessage(
             $botUser->telegram_chat_id,
-            "Спасибо! Ваше видео принято в работу!"
+            $text
         );
 
         sleep(1);

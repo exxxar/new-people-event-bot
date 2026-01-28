@@ -13,12 +13,15 @@ return new class extends Migration {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+
             $table->string('email', 190)->unique();
             $table->string('fio_from_telegram')->nullable();
             $table->string('telegram_chat_id')->nullable();
             $table->integer('role')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->date('birthday')->nullable();
+            $table->string('region')->nullable();
             $table->string('city')->nullable();
             $table->timestamp('blocked_at')->nullable();;
             $table->string("blocked_message")->nullable();

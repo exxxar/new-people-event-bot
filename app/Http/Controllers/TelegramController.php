@@ -129,8 +129,7 @@ class TelegramController extends Controller
 
         $keyboard = [
             [
-                ["text" => "Открыть приложение", "web_app" => [
-                    "url" => env("APP_URL") . "/bot#/"]
+                ["text" => "Ознакомиться с правилами", "callback_data" => "/run_miniapp"
                 ],
             ],
         ];
@@ -142,6 +141,19 @@ class TelegramController extends Controller
 <blockquote>
 К 23 февраля мы создадим персональные открытки с QR‑кодом. Каждая будет содержать одно видео, адресованное конкретному защитнику. Все открытки передадим бойцам.
 </blockquote>
+
+";
+
+        \App\Facades\BotManager::bot()
+            ->replyPhoto($text,
+                InputFile::create(public_path() . $slash . "photo_2026-01-28_16-29-01.jpg",
+                    "photo_2026-01-28_16-29-01.jpg"
+                )
+                , $keyboard);
+    }
+
+    public function runMiniApp(){
+        $text = "
 
 🟥<b>Требования к видео:</b>
 1. Любая ориентация
@@ -159,7 +171,18 @@ class TelegramController extends Controller
 
 <b>Заполните анкету и прикрепите своё видео — нажмите кнопку ниже.</b>
 🍀🍀🍀
-";
+        ";
+
+        $keyboard = [
+            [
+                ["text" => "Заполнить анкету", "web_app" => [
+                    "url" => env("APP_URL") . "/bot#/"]
+                ],
+            ],
+        ];
+
+        $slash = env("APP_DEBUG") ? "\\" : "/";
+
 
         \App\Facades\BotManager::bot()
             ->replyPhoto($text,

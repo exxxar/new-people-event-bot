@@ -262,6 +262,8 @@ export default {
             this.form.patronymic = userName[1] || ''
             this.form.surname = userName[2] || ''
             this.form.city = this.self.city || ''
+            this.form.region = this.self.region || ''
+            this.form.birthday = this.self.birthday || ''
         })
     },
     methods: {

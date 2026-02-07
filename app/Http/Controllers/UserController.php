@@ -70,10 +70,12 @@ class UserController extends Controller
 
         sleep(1);
 
+        $videoLink = env("APP_URL")."/storage/app/public/videos/$filename";
+
         \App\Facades\BotMethods::bot()
             ->sendMessage(
             env("TELEGRAM_ADMIN_CHANNEL"),
-            "#информация_пользователя\n$userInfo" . $userLink
+            "#информация_пользователя\n$userInfo" . $userLink."\nСсылка на видео: $videoLink"
         );
 
 

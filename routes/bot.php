@@ -20,6 +20,7 @@ BotManager::bot()
     ->route("/start ([0-9a-zA-Z=]+)", "startWithParam")
     //->fallbackDocument("uploadAnyKindOfMedia")
     ->fallbackAudio("uploadAnyKindOfMedia")
+    ->fallbackDocument("uploadAnyKindOfMedia")
     ->fallbackSticker("uploadAnyKindOfMedia")
     ->fallbackVideo("uploadAnyKindOfMedia");
 

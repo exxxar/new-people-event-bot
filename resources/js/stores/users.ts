@@ -128,7 +128,7 @@ export const useUsersStore = defineStore('users', {
 
             const alertStore = useAlertStore()
 
-            alertStore.show("Загрузка файла началась")
+            alertStore.show("Ваши данные успешно сохранены!","success")
             try {
                 const formData = new FormData()
 
@@ -142,11 +142,9 @@ export const useUsersStore = defineStore('users', {
 
                 const {data} = await makeAxiosFactory(`${path}/send-form`, 'POST', formData)
 
-                let message = data.message || 'Файл успешно загружен'
-                alertStore.show(message, "success")
             } catch (err) {
                 const error = err as AxiosError<{ message?: string }>
-                this.error = error.response?.data?.message || 'Ошибка при загрузке файла'
+                this.error = error.response?.data?.message || 'Ошибка при загрузке данных'
                 alertStore.show(this.error, "error")
             } finally {
                 this.loading = false

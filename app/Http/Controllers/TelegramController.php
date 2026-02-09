@@ -60,6 +60,20 @@ class TelegramController extends Controller
         $fileUrl = "https://api.telegram.org/file/bot{$token}/{$filePath}";
 
         $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+
+        if (empty($extension)) {
+            $mimeType = $doc->mime_type ?? null;
+
+            $extension = match ($mimeType) {
+                'image/jpeg' => 'jpg',
+                'image/png' => 'png',
+                'application/pdf' => 'pdf',
+                'video/mp4' => 'mp4',
+                default => null,
+            };
+        }
+
+
         $uuid = Str::uuid()->toString();
         $fileName = $uuid . '.' . ($extension ?? 'mp4');
 

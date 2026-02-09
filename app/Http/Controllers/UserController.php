@@ -102,6 +102,12 @@ class UserController extends Controller
             $botUser->telegram_chat_id,
             $text
         );
+        sleep(1);
+        \App\Facades\BotMethods::bot()
+            ->sendMessage(
+                env("TELEGRAM_ADMIN_CHANNEL"),
+                "#информация_пользователя\n✅ Пользователь заполнил анкету\n$userInfo\n" . $userLink
+            );
 /*
         sleep(1);
 

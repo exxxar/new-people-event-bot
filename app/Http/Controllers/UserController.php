@@ -44,8 +44,9 @@ class UserController extends Controller
         $path = $file->storeAs('videos', $filename, 'public');
 
         $botUser = $request->botUser;
-        $botUser->name = $validated['name'] . " " . $validated['patronymic'] . " " . $validated['surname'];
-        $botUser->city = $validated['city'];
+        $botUser->name = ($validated['name'] ?? '-') . " " . ($validated['patronymic'] ?? '-') . " "
+            . ($validated['surname'] ?? '-');
+        $botUser->city = $validated['city'] ?? '-';
         $botUser->region = $validated['region'];
         $botUser->birthday = Carbon::parse($validated["birthday"]);
         $botUser->save();
@@ -70,24 +71,24 @@ class UserController extends Controller
 
         sleep(1);
 
-        $videoLink = env("APP_URL")."/storage/app/public/videos/$filename";
+        $videoLink = env("APP_URL") . "/storage/app/public/videos/$filename";
 
         \App\Facades\BotMethods::bot()
             ->sendMessage(
-            env("TELEGRAM_ADMIN_CHANNEL"),
-            "#информация_пользователя\n$userInfo" . $userLink."\nСсылка на видео: $videoLink"
-        );
+                env("TELEGRAM_ADMIN_CHANNEL"),
+                "#информация_пользователя\n$userInfo" . $userLink . "\n\nСсылка на видео: $videoLink"
+            );
 
 
-        $slash = env("APP_DEBUG") ? "\\" : "/";
+      //  $slash = env("APP_DEBUG") ? "\\" : "/";
 
-        \App\Facades\BotMethods::bot()->sendDocument(
+     /*   \App\Facades\BotMethods::bot()->sendDocument(
             env("TELEGRAM_ADMIN_CHANNEL"),
             "Видео пользователя №" . ($botUser->id ?? '-'),
-            InputFile::create(storage_path("app" . $slash . "public".$slash ) . $path,
+            InputFile::create(storage_path("app" . $slash . "public" . $slash) . $path,
                 $originalName
             )
-        );
+        );*/
 
         return response()->json([
             'status' => 'ok',

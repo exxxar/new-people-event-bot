@@ -54,6 +54,7 @@ Route::prefix("bot-api")
             ->group(function () {
                 // Список всех пользователей
                 Route::post('/send-video', [UserController::class, 'sendVideo']);
+                Route::post('/send-form', [UserController::class, 'sendForm']);
                 // Создать нового пользователя
 
             });

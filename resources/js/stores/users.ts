@@ -122,6 +122,36 @@ export const useUsersStore = defineStore('users', {
                 throw e
             }
         },
+        async uploadForm(form: object): Promise<void> {
+            this.loading = true
+            this.error = null
+
+            const alertStore = useAlertStore()
+
+            alertStore.show("Загрузка файла началась")
+            try {
+                const formData = new FormData()
+
+                Object.entries(form).forEach(([key, value]) => {
+                    formData.append(key, value);
+                });
+
+             //  formData.append('file', file)
+
+               // axios.defaults.adapter = "xhr";
+
+                const {data} = await makeAxiosFactory(`${path}/send-form`, 'POST', formData)
+
+                let message = data.message || 'Файл успешно загружен'
+                alertStore.show(message, "success")
+            } catch (err) {
+                const error = err as AxiosError<{ message?: string }>
+                this.error = error.response?.data?.message || 'Ошибка при загрузке файла'
+                alertStore.show(this.error, "error")
+            } finally {
+                this.loading = false
+            }
+        },
         async uploadFormWithVideo(form: object, file: File): Promise<void> {
             this.loading = true
             this.error = null

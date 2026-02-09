@@ -17,6 +17,48 @@ use Telegram\Bot\FileUpload\InputFile;
 
 class UserController extends Controller
 {
+    public function sendForm(Request $request)
+    {
+        ini_set('upload_max_filesize', '200M');
+        ini_set('post_max_size', '200M');
+        ini_set('memory_limit', '512M');
+        ini_set('max_execution_time', '300');
+        ini_set('max_input_time', '300');
+
+        $validated = $request->validate([
+            'surname' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'patronymic' => 'nullable|string|max:255',
+            'city' => 'required|string|max:255',
+            'region' => 'required|string|max:255',
+            'birthday' => 'required|string|max:255',
+            // 'file' => 'required|file|mimes:mp4,mov,avi,webm|max:1151200',
+        ]);
+
+        $botUser = $request->botUser;
+        $botUser->name = ($validated['name'] ?? '-') . " " . ($validated['patronymic'] ?? '-') . " "
+            . ($validated['surname'] ?? '-');
+        $botUser->city = $validated['city'] ?? '-';
+        $botUser->region = $validated['region'] ?? '-';
+        $botUser->birthday = Carbon::parse($validated["birthday"]);
+        $botUser->save();
+
+        $text = "✅ <b>А теперь отправьте в бот своё видео!</b>";
+
+        \App\Facades\BotMethods::bot()->sendMessage(
+            $botUser->telegram_chat_id,
+            $text
+        );
+
+
+        return response()->json([
+            'status' => 'ok',
+            'id' => $botUser->id,
+        ]);
+
+
+    }
+
     public function sendVideo(Request $request)
     {
         ini_set('upload_max_filesize', '200M');
@@ -32,16 +74,16 @@ class UserController extends Controller
             'city' => 'required|string|max:255',
             'region' => 'required|string|max:255',
             'birthday' => 'required|string|max:255',
-            'file' => 'required|file|mimes:mp4,mov,avi,webm|max:1151200',
+           // 'file' => 'required|file|mimes:mp4,mov,avi,webm|max:1151200',
         ]);
-
+/*
         $file = $request->file('file');
         $uuid = Str::uuid()->toString();
         $extension = $file->getClientOriginalExtension();
         $originalName = $file->getClientOriginalName();
         $filename = $uuid . '.' . $extension;
 
-        $path = $file->storeAs('videos', $filename, 'public');
+        $path = $file->storeAs('videos', $filename, 'public');*/
 
         $botUser = $request->botUser;
         $botUser->name = ($validated['name'] ?? '-') . " " . ($validated['patronymic'] ?? '-') . " "
@@ -54,21 +96,13 @@ class UserController extends Controller
         $userInfo = $botUser->toTelegramText();
         $userLink = $botUser->getUserTelegramLink();
 
-        $text = "✅ <b>Спасибо! Ваше поздравление принято!</b>
-
-Чтобы не пропустить итоги акции, подписывайтесь на нас в социальных сетях:
-
-📲 https://t.me/Newpeople_dnr
-
-📲 https://vk.com/newpeople_dnr
-
-<b>Мира вам и благополучия!</b> 🤍";
+        $text = "✅ <b>А теперь отправьте в бот своё видео!</b>";
 
         \App\Facades\BotMethods::bot()->sendMessage(
             $botUser->telegram_chat_id,
             $text
         );
-
+/*
         sleep(1);
 
         $videoLink = env("APP_URL") . "/storage/app/public/videos/$filename";
@@ -77,7 +111,7 @@ class UserController extends Controller
             ->sendMessage(
                 env("TELEGRAM_ADMIN_CHANNEL"),
                 "#информация_пользователя\n$userInfo" . $userLink . "\n\nСсылка на видео: $videoLink"
-            );
+            );*/
 
 
       //  $slash = env("APP_DEBUG") ? "\\" : "/";

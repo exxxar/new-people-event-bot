@@ -272,15 +272,10 @@ export default {
         },
 
         submitForm() {
-            if (this.activeTab === 'form') {
-                this.activeTab = 'upload'
-                return
-            }
-            this.userStore.uploadFormWithVideo(this.form, this.videoFile)
+            this.userStore.uploadForm(this.form)
                 .then(() => {
                     this.tg.close()
                 })
-            this.formCompleted = true;
         },
 
         handleDrop(e) {

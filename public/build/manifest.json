@@ -22,7 +22,7 @@
     ]
   },
   "resources/js/Pages/Main.vue": {
-    "file": "assets/Main-ATUGPt4M.js",
+    "file": "assets/Main-d--RIFEQ.js",
     "name": "Main",
     "src": "resources/js/Pages/Main.vue",
     "isDynamicEntry": true,
@@ -35,7 +35,7 @@
     ]
   },
   "resources/js/Pages/MenuPage.vue": {
-    "file": "assets/MenuPage-CD3ltIix.js",
+    "file": "assets/MenuPage-DxPoZHGh.js",
     "name": "MenuPage",
     "src": "resources/js/Pages/MenuPage.vue",
     "isDynamicEntry": true,
@@ -44,11 +44,11 @@
       "__plugin-vue_export-helper-DlAUqK2U.js"
     ],
     "css": [
-      "assets/MenuPage-9IRqQNiR.css"
+      "assets/MenuPage-Basl2SDm.css"
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-DtnPqOnW.js",
+    "file": "assets/app-Bc08Ob09.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

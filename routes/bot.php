@@ -24,13 +24,16 @@ BotManager::bot()
     ->fallbackVideo("uploadAnyKindOfMedia");
 
 
-BotManager::bot()
+/*BotManager::bot()
+    ->fallbackVideo(function (...$data) {
+
+    })
     ->fallbackDocument(function (...$data) {
 
     })
     ->fallbackPhoto(function (...$data) {
 
-    });
+    });*/
 
 BotManager::bot()
     ->location(function (...$data) {

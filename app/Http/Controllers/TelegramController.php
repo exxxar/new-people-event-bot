@@ -7,7 +7,10 @@ use App\Facades\BotManager;
 use App\Facades\BotMethods;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Telegram\Bot\FileUpload\InputFile;
@@ -51,23 +54,26 @@ class TelegramController extends Controller
         $doc = $data[3] ?? null;
         $type = $data[4] ?? "document";
 
-        $botUser = BotManager::bot()->currentBotUser();
+        $filePath = $doc->file_id ?? null;
 
-        if (!$botUser->is_admin && !$botUser->is_manager) {
-            BotManager::bot()
-                ->sendMessage(
-                    $botUser->telegram_chat_id,
-                    "Данная опция доступна только персоналу бота!");
-            return;
-        }
+        $token = env("TELEGRAM_BOT_TOKEN"); // поправь если у тебя другой конфиг
+        $fileUrl = "https://api.telegram.org/file/bot{$token}/{$filePath}";
 
-        $docToSend = $doc->file_id ?? null;
+        $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+        $uuid = Str::uuid()->toString();
+        $fileName = $uuid . '.' . $extension;
+
+        $fileContent = Http::get($fileUrl)->body();
+
+        // 5️⃣ Сохраняем в storage
+        Storage::disk('local')->put("bot_media/{$fileName}", $fileContent);
+
+        $videoLink = env("APP_URL") . "/storage/app/public/videos/$fileName";
 
 
         BotManager::bot()
-            ->sendMessage(
-                $botUser->telegram_chat_id,
-                "Медиа файл загружен!");
+            ->reply(
+                "Загружено новое видео:\n$videoLink");
 
     }
 

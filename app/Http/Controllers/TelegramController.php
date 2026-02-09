@@ -80,7 +80,7 @@ class TelegramController extends Controller
         $fileContent = Http::get($fileUrl)->body();
 
         // 5️⃣ Сохраняем в storage
-        Storage::disk('local')->put("videos/{$fileName}", $fileContent);
+        Storage::disk('local')->put("public/videos/{$fileName}", $fileContent);
 
         $videoLink = env("APP_URL") . "/storage/app/public/videos/$fileName";
 

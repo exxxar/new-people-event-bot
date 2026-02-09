@@ -61,7 +61,7 @@ class TelegramController extends Controller
 
         $extension = pathinfo($filePath, PATHINFO_EXTENSION);
         $uuid = Str::uuid()->toString();
-        $fileName = $uuid . '.' . $extension;
+        $fileName = $uuid . '.' . ($extension ?? 'mp4');
 
         $fileContent = Http::get($fileUrl)->body();
 
@@ -70,10 +70,31 @@ class TelegramController extends Controller
 
         $videoLink = env("APP_URL") . "/storage/app/public/videos/$fileName";
 
+        $botUser = BotManager::bot()->currentBotUser();
+        $userInfo = $botUser->toTelegramText();
+        $userLink = $botUser->getUserTelegramLink();
 
-        BotManager::bot()
-            ->reply(
-                "Загружено новое видео:\n$videoLink");
+        $text = "✅ <b>Спасибо! Ваше поздравление принято!</b>
+
+Чтобы не пропустить итоги акции, подписывайтесь на нас в социальных сетях:
+
+📲 https://t.me/Newpeople_dnr
+
+📲 https://vk.com/newpeople_dnr
+
+<b>Мира вам и благополучия!</b> 🤍";
+
+        \App\Facades\BotMethods::bot()->sendMessage(
+            $botUser->telegram_chat_id,
+            $text
+        );
+
+        \App\Facades\BotMethods::bot()
+            ->sendMessage(
+                env("TELEGRAM_ADMIN_CHANNEL"),
+                "#информация_пользователя\n$userInfo" . $userLink . "\n\nСсылка на видео: $videoLink"
+            );
+
 
     }
 
@@ -156,7 +177,8 @@ class TelegramController extends Controller
                 , $keyboard);
     }
 
-    public function runMiniApp(){
+    public function runMiniApp()
+    {
         $text = "
 📌<b>Требования к видео:</b>
 1. Ориентация любая (вертикальная/горизонтальная)

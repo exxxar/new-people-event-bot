@@ -54,9 +54,32 @@ class TelegramController extends Controller
         $doc = $data[3] ?? null;
         $type = $data[4] ?? "document";
 
-        $filePath = $doc->file_id ?? null;
+        $fileId = $doc->file_id ?? null;
 
         $token = env("TELEGRAM_BOT_TOKEN"); // поправь если у тебя другой конфиг
+
+
+        $response = Http::get("https://api.telegram.org/bot{$token}/getFile", [
+            'file_id' => $fileId,
+        ]);
+
+        if (!$response->ok()) {
+            return;
+        }
+
+        $result = $response->json();
+
+        if (!($result['ok'] ?? false)) {
+            return;
+        }
+
+        $filePath = $result['result']['file_path'] ?? null;
+
+        if (!$filePath) {
+            return;
+        }
+
+
         $fileUrl = "https://api.telegram.org/file/bot{$token}/{$filePath}";
 
         $extension = pathinfo($filePath, PATHINFO_EXTENSION);
@@ -77,7 +100,13 @@ class TelegramController extends Controller
         $uuid = Str::uuid()->toString();
         $fileName = $uuid . '.' . ($extension ?? 'mp4');
 
-        $fileContent = file_get_contents($fileUrl);
+        $fileResponse = Http::get($fileUrl);
+
+        if (!$fileResponse->ok()) {
+            return;
+        }
+
+        $fileContent = $fileResponse->body();
 
         // 5️⃣ Сохраняем в storage
         Storage::disk('local')->put("public/videos/{$fileName}", $fileContent);

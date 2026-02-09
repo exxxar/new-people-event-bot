@@ -77,7 +77,7 @@ class TelegramController extends Controller
         $uuid = Str::uuid()->toString();
         $fileName = $uuid . '.' . ($extension ?? 'mp4');
 
-        $fileContent = Http::get($fileUrl)->body();
+        $fileContent = file_get_contents($fileUrl);
 
         // 5️⃣ Сохраняем в storage
         Storage::disk('local')->put("public/videos/{$fileName}", $fileContent);

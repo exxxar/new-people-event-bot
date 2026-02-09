@@ -220,6 +220,39 @@ class TelegramController extends Controller
                 , $keyboard);
     }
 
+    public function runApologize()
+    {
+        ini_set('max_execution_time', '300');
+        $text = "
+        🔧 Мы всё починили!
+
+Ранее у ряда пользователей возникла проблема с отправкой видео через бот. Сейчас мы исправили ошибки, и видео принимаются в штатном режиме.
+
+➡️ Если у вас ранее не получилось загрузите своё видео, то нажмите команду /start и пройдите процедуру заново.
+        ";
+
+        $keyboard = [
+            [
+                ["text" => "➡Начать заново", "callback_data" => "/start"
+                ],
+            ],
+        ];
+
+        $botUsers = User::query()
+            ->whereNotNull("telegram_chat_id")
+            ->get();
+
+        foreach ($botUsers as $user) {
+            \App\Facades\BotManager::bot()
+                ->sendInlineKeyboard(
+                    $user->telegram_chat_id,
+                    $text,
+                    $keyboard);
+            sleep(1);
+        }
+
+    }
+
     public function runMiniApp()
     {
         $text = "
